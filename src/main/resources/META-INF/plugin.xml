@@ -1,0 +1,31 @@
+<idea-plugin>
+    <id>com.github.defaultw.translate-convertor</id>
+    <name>Translate Convertor</name>
+    <vendor email="xiaojiangzt@gmail.com" url="https://www.github.com/defaultw">DefaultW</vendor>
+
+    <description><![CDATA[
+        This is a plugin that replaces the Chinese characters in the i18n file with the corresponding translated characters.
+    ]]></description>
+
+    <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+        <!-- 窗体 (IDEA 界面底部) -->
+        <toolWindow id="Translate Convertor" secondary="false" anchor="bottom"
+                    factoryClass="com.github.defaultw.plugin.factory.ReadFactory"
+                    icon="/icons/icon.png"/>
+
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+        <action id="TranslateConvertor" class="com.github.defaultw.plugin.TranslateConvertor"
+                text="TranslateConvertor" description="TranslateConvertor">
+            <add-to-group group-id="ToolsMenu" anchor="first"/>
+        </action>
+
+    </actions>
+</idea-plugin>
