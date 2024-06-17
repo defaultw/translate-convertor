@@ -9,7 +9,7 @@ import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.ui.JBSplitter;
 
 /**
- * TODO
+ * 主体页面
  *
  * @author Default.W
  * @date 2024/6/17
