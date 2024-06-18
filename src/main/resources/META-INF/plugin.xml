@@ -22,6 +22,8 @@
                     factoryClass="com.github.defaultw.plugin.factory.TranslateFactory"
                     icon="/icons/icon.png"/>
 
+        <applicationService serviceImplementation="com.github.defaultw.plugin.infrastructure.DataSetting" />
+
     </extensions>
 
     <actions>

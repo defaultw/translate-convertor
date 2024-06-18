@@ -1,5 +1,8 @@
 package com.github.defaultw.plugin.ui;
 
+import com.github.defaultw.plugin.infrastructure.DataSetting;
+import com.github.defaultw.plugin.infrastructure.DataState;
+import com.github.defaultw.plugin.infrastructure.Language;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import org.jetbrains.annotations.Nls;
@@ -8,22 +11,36 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 
 /**
- * TODO
+ * 翻译设置页面
  *
  * @author Default.W
  * @date 2024/6/17
  */
 public class SettingUI implements Configurable {
-    private JComboBox comboBox1;
-    private JComboBox comboBox2;
-    private JComboBox comboBox3;
     private JPanel mainPanel;
+    private JComboBox<Language> fromComboBox;
+    private JComboBox<Language> toComboBox;
+    private JLabel fromLabel;
+    private JLabel toLabel;
 
 
-    private ConsoleUI consoleUi;
+    private BaseConsoleUi baseConsoleUi;
 
-    public SettingUI(ConsoleUI consoleUi) {
-        this.consoleUi = consoleUi;
+    public SettingUI(BaseConsoleUi baseConsoleUi) {
+        this.baseConsoleUi = baseConsoleUi;
+        this.mainPanel.setSize(200, 100);
+
+        DataState state = DataSetting.getInstance().getState();
+        fromComboBox.addItem(new Language("zh", "中文"));
+        fromComboBox.addItem(new Language("en", "英文"));
+
+        toComboBox.addItem(new Language("en", "英文"));
+        toComboBox.addItem(new Language("zh", "中文"));
+
+        if (state != null){
+            fromComboBox.setSelectedItem(state.getFrom());
+            toComboBox.setSelectedItem(state.getTo());
+        }
     }
 
     @Override
@@ -38,11 +55,16 @@ public class SettingUI implements Configurable {
 
     @Override
     public boolean isModified() {
-        return false;
+        return true;
     }
 
     @Override
     public void apply() throws ConfigurationException {
-
+        DataState dataState = DataSetting.getInstance().getState();
+        if (dataState == null) {
+            return;
+        }
+        dataState.setFrom((Language) fromComboBox.getSelectedItem());
+        dataState.setTo((Language) toComboBox.getSelectedItem());
     }
 }

@@ -24,6 +24,6 @@ public class SettingBar extends DumbAwareAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
-        ShowSettingsUtil.getInstance().editConfigurable(panel.getProject(), new SettingUI(panel.getConsoleUi()));
+        ShowSettingsUtil.getInstance().editConfigurable(panel.getProject(), new SettingUI(panel.getBaseConsoleUi()));
     }
 }

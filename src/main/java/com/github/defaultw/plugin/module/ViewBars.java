@@ -1,6 +1,7 @@
 package com.github.defaultw.plugin.module;
 
-import com.github.defaultw.plugin.ui.ConsoleUI;
+import com.github.defaultw.plugin.ui.BaseConsoleUi;
+import com.github.defaultw.plugin.ui.PageComponentUi;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
@@ -18,13 +19,15 @@ public class ViewBars extends SimpleToolWindowPanel {
 
     private Project project;
 
-    private ConsoleUI consoleUi;
+    private BaseConsoleUi baseConsoleUi;
 
 
     public ViewBars(Project project) {
         super(false, true);
         this.project = project;
-        this.consoleUi = new ConsoleUI();
+        this.baseConsoleUi = new BaseConsoleUi();
+        this.baseConsoleUi.addTab("Translate", new PageComponentUi(1).getMainPanel());
+        this.baseConsoleUi.addTab("Convertor", new PageComponentUi(2).getMainPanel());
 
         // 设置窗体侧边栏按钮
         DefaultActionGroup group = new DefaultActionGroup();
@@ -37,7 +40,7 @@ public class ViewBars extends SimpleToolWindowPanel {
         // 添加
         JBSplitter splitter = new JBSplitter(false);
         splitter.setSplitterProportionKey("main.splitter.key");
-        splitter.setFirstComponent(consoleUi.getTabbedPane());
+        splitter.setFirstComponent(baseConsoleUi.getTabbedPane());
         splitter.setProportion(0.3f);
         setContent(splitter);
 
@@ -47,7 +50,7 @@ public class ViewBars extends SimpleToolWindowPanel {
         return project;
     }
 
-    public ConsoleUI getConsoleUi() {
-        return consoleUi;
+    public BaseConsoleUi getBaseConsoleUi() {
+        return baseConsoleUi;
     }
 }
