@@ -1,5 +1,9 @@
 package com.github.defaultw.plugin.ui;
 
+import com.github.defaultw.plugin.handler.TranslateConvertorHandler;
+import com.github.defaultw.plugin.handler.bo.ConvertorBO;
+import org.jetbrains.annotations.NotNull;
+
 import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -29,9 +33,28 @@ public class PageComponentUi {
 
     /**
      * 构建页面
+     *
      * @param type 1: translate页面; 2: convertor页面
      */
     public PageComponentUi(int type) {
+        pageSetting(type);
+
+        if (type == 1) {
+
+        } else if (type == 2) {
+            executeButton.addActionListener(e -> {
+                ConvertorBO convertor = new ConvertorBO();
+                convertor.setSourceFilePath(i18nTextField.getText());
+                convertor.setTranslateFilePath(translateTextField.getText());
+                convertor.setCompleteLog(enableRadio.isSelected());
+                ConvertorBO handler = TranslateConvertorHandler.handler(convertor);
+                textArea.setText(handler.getResult());
+            });
+        }
+
+    }
+
+    private void pageSetting(int type) {
         if (type == 1) {
             translateFileLabel.setVisible(false);
             translateTextField.setVisible(false);
@@ -42,15 +65,7 @@ public class PageComponentUi {
             disenableRadio.setVisible(false);
         } else if (type == 2) {
             // 添加翻译后文件
-            translateSelectButton.addActionListener(e -> {
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                fileChooser.showOpenDialog(selectPanel);
-                File file = fileChooser.getSelectedFile();
-                if (file != null) {
-                    translateTextField.setText(file.getPath());
-                }
-            });
+            translateSelectButton.addActionListener(createChooseAction(translateTextField));
 
             // 设置单选, 默认选中disenable
             disenableRadio.setSelected(true);
@@ -61,16 +76,26 @@ public class PageComponentUi {
             enableRadio.addActionListener(singleSelect);
             disenableRadio.addActionListener(singleSelect);
         }
-        i18nSelectButton.addActionListener( e -> {
+        i18nSelectButton.addActionListener(createChooseAction(i18nTextField));
+    }
+
+    /**
+     * 创建文件选择Action
+     *
+     * @param textField 文本框
+     * @return java.awt.event.ActionListener
+     */
+    @NotNull
+    private ActionListener createChooseAction(JTextField textField) {
+        return e -> {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
             fileChooser.showOpenDialog(selectPanel);
             File file = fileChooser.getSelectedFile();
             if (file != null) {
-                i18nTextField.setText(file.getPath());
+                textField.setText(file.getPath());
             }
-        });
-
+        };
     }
 
     public JPanel getMainPanel() {
