@@ -1,12 +1,16 @@
 package com.github.defaultw.plugin.ui;
 
+import com.github.defaultw.plugin.domain.model.bo.BaiduTranslateParamBO;
+import com.github.defaultw.plugin.domain.service.impl.BaiduTranslateServiceImpl;
 import com.github.defaultw.plugin.handler.TranslateConvertorHandler;
 import com.github.defaultw.plugin.handler.bo.ConvertorBO;
+import com.github.defaultw.plugin.infrastructure.DataSetting;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Objects;
 
 /**
  * 基础页面
@@ -40,7 +44,12 @@ public class PageComponentUi {
         pageSetting(type);
 
         if (type == 1) {
-
+            BaiduTranslateServiceImpl baiduTranslateService = new BaiduTranslateServiceImpl();
+            executeButton.addActionListener(e -> {
+                BaiduTranslateParamBO param = new BaiduTranslateParamBO();
+                param.setFrom(Objects.requireNonNull(DataSetting.getInstance().getState()).getFrom().getCode());
+                // param.setTo();
+            });
         } else if (type == 2) {
             executeButton.addActionListener(e -> {
                 ConvertorBO convertor = new ConvertorBO();
