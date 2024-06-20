@@ -12,7 +12,7 @@ public class TranslateParamBO {
 
     private String to;
 
-    private String query;
+    private String text;
 
     public String getFrom() {
         return from;
@@ -30,12 +30,12 @@ public class TranslateParamBO {
         this.to = to;
     }
 
-    public String getQuery() {
-        return query;
+    public String getText() {
+        return text;
     }
 
-    public void setQuery(String query) {
-        this.query = query;
+    public void setText(String text) {
+        this.text = text;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class TranslateParamBO {
         return "TranslateParamsBO{" +
                 "from='" + from + '\'' +
                 ", to='" + to + '\'' +
-                ", query='" + query + '\'' +
+                ", text='" + text + '\'' +
                 '}';
     }
 }

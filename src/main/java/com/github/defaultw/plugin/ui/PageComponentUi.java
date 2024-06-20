@@ -1,7 +1,6 @@
 package com.github.defaultw.plugin.ui;
 
-import com.github.defaultw.plugin.domain.model.bo.BaiduTranslateParamBO;
-import com.github.defaultw.plugin.domain.service.impl.BaiduTranslateServiceImpl;
+import com.github.defaultw.plugin.domain.model.bo.BaiduTranslateConfigBO;
 import com.github.defaultw.plugin.handler.TranslateConvertorHandler;
 import com.github.defaultw.plugin.handler.bo.ConvertorBO;
 import com.github.defaultw.plugin.infrastructure.DataSetting;
@@ -44,9 +43,8 @@ public class PageComponentUi {
         pageSetting(type);
 
         if (type == 1) {
-            BaiduTranslateServiceImpl baiduTranslateService = new BaiduTranslateServiceImpl();
             executeButton.addActionListener(e -> {
-                BaiduTranslateParamBO param = new BaiduTranslateParamBO();
+                BaiduTranslateConfigBO param = new BaiduTranslateConfigBO();
                 param.setFrom(Objects.requireNonNull(DataSetting.getInstance().getState()).getFrom().getCode());
                 // param.setTo();
             });

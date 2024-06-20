@@ -12,6 +12,10 @@ public class DataState {
 
     private Language to;
 
+    private String apiKey;
+
+    private String secretKey;
+
     public Language getFrom() {
         return from;
     }
@@ -26,5 +30,31 @@ public class DataState {
 
     public void setTo(Language to) {
         this.to = to;
+    }
+
+    public String getApiKey() {
+        return apiKey;
+    }
+
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
+    }
+
+    public String getSecretKey() {
+        return secretKey;
+    }
+
+    public void setSecretKey(String secretKey) {
+        this.secretKey = secretKey;
+    }
+
+    @Override
+    public String toString() {
+        return "DataState{" +
+                "from=" + from +
+                ", to=" + to +
+                ", apiKey='" + apiKey + '\'' +
+                ", secretKey='" + secretKey + '\'' +
+                '}';
     }
 }

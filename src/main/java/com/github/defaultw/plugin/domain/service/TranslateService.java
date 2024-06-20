@@ -1,6 +1,5 @@
 package com.github.defaultw.plugin.domain.service;
 
-import com.github.defaultw.plugin.domain.model.bo.TranslateParamBO;
 import com.github.defaultw.plugin.domain.model.bo.TranslateResultBO;
 
 import java.util.List;
@@ -11,15 +10,15 @@ import java.util.List;
  * @author Default.W
  * @date 2024/6/19
  */
-public interface ITranslateService {
+public interface TranslateService {
 
     /**
      * 翻译
      *
-     * @param params 翻译相关信息
+     * @param text 待翻译字符串
      * @return 翻译后结果
      */
-    List<TranslateResultBO> translate(TranslateParamBO params);
+    List<TranslateResultBO> translate(String text);
 
 
 }

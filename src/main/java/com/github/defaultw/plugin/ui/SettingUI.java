@@ -22,6 +22,10 @@ public class SettingUI implements Configurable {
     private JComboBox<Language> toComboBox;
     private JLabel fromLabel;
     private JLabel toLabel;
+    private JTextField textField1;
+    private JTextField textField2;
+    private JLabel apiKeyLabel;
+    private JLabel secretKeyLabel;
 
 
     private BaseConsoleUi baseConsoleUi;
