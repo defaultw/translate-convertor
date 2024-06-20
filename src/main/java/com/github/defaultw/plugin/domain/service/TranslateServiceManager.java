@@ -13,6 +13,15 @@ public class TranslateServiceManager {
 
     private final Map<String, TranslateService> services = new HashMap<>();
 
+    private static TranslateServiceManager manager;
+
+    public static TranslateServiceManager getInstance() {
+        if (manager == null) {
+            manager = new TranslateServiceManager();
+        }
+        return manager;
+    }
+
     public void registerService(String serviceName, TranslateService service) {
         services.put(serviceName, service);
     }

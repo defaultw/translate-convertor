@@ -1,5 +1,9 @@
 package com.github.defaultw.plugin.handler;
 
+import cn.hutool.core.collection.CollUtil;
+import com.github.defaultw.plugin.domain.model.bo.TranslateResultBO;
+import com.github.defaultw.plugin.domain.service.TranslateService;
+import com.github.defaultw.plugin.domain.service.TranslateServiceManager;
 import com.github.defaultw.plugin.handler.bo.ConvertorBO;
 
 import java.io.IOException;
@@ -9,6 +13,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -19,7 +24,39 @@ import java.util.stream.Collectors;
  */
 public class TranslateConvertorHandler {
 
-    public static ConvertorBO handler(ConvertorBO convertor) {
+    public static ConvertorBO translateHandler(ConvertorBO convertor) {
+        StringBuilder message = new StringBuilder();
+        StringBuilder text = new StringBuilder();
+        try {
+            Map<String, String> sourceField = loadTranslations(convertor.getSourceFilePath());
+            sourceField.forEach((key, value) -> {
+                text.append(value).append("\n");
+            });
+            TranslateService translateService = TranslateServiceManager.getInstance().getTranslate("baidu");
+            List<TranslateResultBO> translate = translateService.translate(text.toString());
+            if (CollUtil.isNotEmpty(translate)) {
+                AtomicInteger i = new AtomicInteger();
+                sourceField.forEach((key, value) -> {
+                    sourceField.put(key, translate.get(i.getAndIncrement()).getDst());
+                });
+            }
+            List<String> updatedLines = updateLines(convertor.getSourceFilePath(), sourceField, message, convertor);
+
+            if (!updatedLines.isEmpty()) {
+                overwriteFile(convertor.getSourceFilePath(), updatedLines);
+                message.append("i18n file has been successfully updated.\n");
+            } else {
+                message.append("No changes were made to the i18n file.\n");
+            }
+        } catch (IOException e) {
+            message.append("An error occurred while processing files: ").append(e.getMessage()).append("\n");
+        }
+
+        convertor.setResult(message.toString());
+        return convertor;
+    }
+
+    public static ConvertorBO convertorHandler(ConvertorBO convertor) {
 
         Optional<String> i18nFilePath = Optional.ofNullable(convertor.getSourceFilePath());
         Optional<String> translatedFilePath = Optional.ofNullable(convertor.getTranslateFilePath());

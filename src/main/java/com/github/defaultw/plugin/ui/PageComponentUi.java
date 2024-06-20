@@ -1,15 +1,12 @@
 package com.github.defaultw.plugin.ui;
 
-import com.github.defaultw.plugin.domain.model.bo.BaiduTranslateConfigBO;
 import com.github.defaultw.plugin.handler.TranslateConvertorHandler;
 import com.github.defaultw.plugin.handler.bo.ConvertorBO;
-import com.github.defaultw.plugin.infrastructure.DataSetting;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.Objects;
 
 /**
  * 基础页面
@@ -41,12 +38,17 @@ public class PageComponentUi {
      */
     public PageComponentUi(int type) {
         pageSetting(type);
+        changeExecuteButtonAction(type);
+    }
+
+    private void changeExecuteButtonAction(int type) {
 
         if (type == 1) {
             executeButton.addActionListener(e -> {
-                BaiduTranslateConfigBO param = new BaiduTranslateConfigBO();
-                param.setFrom(Objects.requireNonNull(DataSetting.getInstance().getState()).getFrom().getCode());
-                // param.setTo();
+                ConvertorBO convertor = new ConvertorBO();
+                convertor.setSourceFilePath(i18nTextField.getText());
+                ConvertorBO handler = TranslateConvertorHandler.translateHandler(convertor);
+                textArea.setText(handler.getResult());
             });
         } else if (type == 2) {
             executeButton.addActionListener(e -> {
@@ -54,11 +56,10 @@ public class PageComponentUi {
                 convertor.setSourceFilePath(i18nTextField.getText());
                 convertor.setTranslateFilePath(translateTextField.getText());
                 convertor.setCompleteLog(enableRadio.isSelected());
-                ConvertorBO handler = TranslateConvertorHandler.handler(convertor);
+                ConvertorBO handler = TranslateConvertorHandler.convertorHandler(convertor);
                 textArea.setText(handler.getResult());
             });
         }
-
     }
 
     private void pageSetting(int type) {

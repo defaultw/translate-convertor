@@ -26,8 +26,11 @@ public class ViewBars extends SimpleToolWindowPanel {
         super(false, true);
         this.project = project;
         this.baseConsoleUi = new BaseConsoleUi();
-        this.baseConsoleUi.addTab("Translate", new PageComponentUi(1).getMainPanel());
-        this.baseConsoleUi.addTab("Convertor", new PageComponentUi(2).getMainPanel());
+        PageComponentUi translateComponentUi = new PageComponentUi(1);
+
+        this.baseConsoleUi.addTab("Translate", translateComponentUi.getMainPanel());
+        PageComponentUi convertorComponentUi = new PageComponentUi(2);
+        this.baseConsoleUi.addTab("Convertor", convertorComponentUi.getMainPanel());
 
         // 设置窗体侧边栏按钮
         DefaultActionGroup group = new DefaultActionGroup();
