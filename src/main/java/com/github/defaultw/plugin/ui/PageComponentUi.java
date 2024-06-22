@@ -47,7 +47,8 @@ public class PageComponentUi {
             executeButton.addActionListener(e -> {
                 ConvertorBO convertor = new ConvertorBO();
                 convertor.setSourceFilePath(i18nTextField.getText());
-                ConvertorBO handler = TranslateConvertorHandler.translateHandler(convertor);
+                convertor.setTranslateNeeded(true);
+                ConvertorBO handler = TranslateConvertorHandler.processTranslate(convertor);
                 textArea.setText(handler.getResult());
             });
         } else if (type == 2) {
@@ -56,7 +57,8 @@ public class PageComponentUi {
                 convertor.setSourceFilePath(i18nTextField.getText());
                 convertor.setTranslateFilePath(translateTextField.getText());
                 convertor.setCompleteLog(enableRadio.isSelected());
-                ConvertorBO handler = TranslateConvertorHandler.convertorHandler(convertor);
+                convertor.setTranslateNeeded(false);
+                ConvertorBO handler = TranslateConvertorHandler.processTranslate(convertor);
                 textArea.setText(handler.getResult());
             });
         }

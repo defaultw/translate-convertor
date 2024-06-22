@@ -16,6 +16,11 @@ public class DataState {
 
     private String secretKey;
 
+    /**
+     * 当前选择的翻译服务
+     */
+    private String currentTranslateService;
+
     public Language getFrom() {
         return from;
     }
@@ -48,6 +53,14 @@ public class DataState {
         this.secretKey = secretKey;
     }
 
+    public String getCurrentTranslateService() {
+        return currentTranslateService;
+    }
+
+    public void setCurrentTranslateService(String currentTranslateService) {
+        this.currentTranslateService = currentTranslateService;
+    }
+
     @Override
     public String toString() {
         return "DataState{" +
@@ -55,6 +68,7 @@ public class DataState {
                 ", to=" + to +
                 ", apiKey='" + apiKey + '\'' +
                 ", secretKey='" + secretKey + '\'' +
+                ", currentTranslateService='" + currentTranslateService + '\'' +
                 '}';
     }
 }

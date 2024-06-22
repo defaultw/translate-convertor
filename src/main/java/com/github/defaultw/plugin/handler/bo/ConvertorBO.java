@@ -16,6 +16,8 @@ public class ConvertorBO {
 
     private Boolean completeLog;
 
+    private Boolean isTranslateNeeded;
+
     public String getSourceFilePath() {
         return sourceFilePath;
     }
@@ -48,6 +50,14 @@ public class ConvertorBO {
         this.completeLog = completeLog;
     }
 
+    public Boolean getTranslateNeeded() {
+        return isTranslateNeeded;
+    }
+
+    public void setTranslateNeeded(Boolean translateNeeded) {
+        isTranslateNeeded = translateNeeded;
+    }
+
     @Override
     public String toString() {
         return "ConvertorBO{" +
@@ -55,6 +65,7 @@ public class ConvertorBO {
                 ", translateFilePath='" + translateFilePath + '\'' +
                 ", result='" + result + '\'' +
                 ", completeLog=" + completeLog +
+                ", isTranslateNeeded=" + isTranslateNeeded +
                 '}';
     }
 }

@@ -10,10 +10,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -24,23 +23,19 @@ import java.util.stream.Collectors;
  */
 public class TranslateConvertorHandler {
 
-    public static ConvertorBO translateHandler(ConvertorBO convertor) {
+    public static ConvertorBO processTranslate(ConvertorBO convertor) {
         StringBuilder message = new StringBuilder();
-        StringBuilder text = new StringBuilder();
         try {
-            Map<String, String> sourceField = loadTranslations(convertor.getSourceFilePath());
-            sourceField.forEach((key, value) -> {
-                text.append(value).append("\n");
-            });
-            TranslateService translateService = TranslateServiceManager.getInstance().getTranslate("baidu");
-            List<TranslateResultBO> translate = translateService.translate(text.toString());
-            if (CollUtil.isNotEmpty(translate)) {
-                AtomicInteger i = new AtomicInteger();
-                sourceField.forEach((key, value) -> {
-                    sourceField.put(key, translate.get(i.getAndIncrement()).getDst());
-                });
+            // 翻译后的字段,包括 调取翻译服务 和 直接从翻译文件中读取
+            Map<String, String> translateFields;
+            if (convertor.getTranslateNeeded()) {
+                // 通过翻译服务获取
+                translateFields = loadTranslateMapData(convertor);
+            } else {
+                // 直接从翻译文件读取
+                translateFields = loadFileFieldMapData(convertor.getTranslateFilePath());
             }
-            List<String> updatedLines = updateLines(convertor.getSourceFilePath(), sourceField, message, convertor);
+            List<String> updatedLines = updateI18nFile(convertor.getSourceFilePath(), translateFields, message, convertor);
 
             if (!updatedLines.isEmpty()) {
                 overwriteFile(convertor.getSourceFilePath(), updatedLines);
@@ -51,56 +46,46 @@ public class TranslateConvertorHandler {
         } catch (IOException e) {
             message.append("An error occurred while processing files: ").append(e.getMessage()).append("\n");
         }
-
         convertor.setResult(message.toString());
         return convertor;
     }
 
-    public static ConvertorBO convertorHandler(ConvertorBO convertor) {
-
-        Optional<String> i18nFilePath = Optional.ofNullable(convertor.getSourceFilePath());
-        Optional<String> translatedFilePath = Optional.ofNullable(convertor.getTranslateFilePath());
-
-        if (i18nFilePath.isEmpty() || translatedFilePath.isEmpty()) {
-            convertor.setResult("Both the i18n original file and translated kv file must be specified.");
-            return convertor;
-        }
-
-        StringBuilder message = new StringBuilder();
-
-        try {
-            Map<String, String> translations = loadTranslations(translatedFilePath.get());
-            List<String> updatedLines = updateLines(i18nFilePath.get(), translations, message, convertor);
-
-            if (!updatedLines.isEmpty()) {
-                overwriteFile(i18nFilePath.get(), updatedLines);
-                message.append("i18n file has been successfully updated.\n");
-            } else {
-                message.append("No changes were made to the i18n file.\n");
+    private static Map<String, String> loadTranslateMapData(ConvertorBO convertor) throws IOException {
+        Map<String, String> translateFields = new HashMap<>();
+        Map<String, String> sourceFields = loadFileFieldMapData(convertor.getSourceFilePath());
+        StringBuilder text = new StringBuilder();
+        // 构建待翻译文本内容
+        sourceFields.forEach((key, value) -> {
+            text.append(value).append("\n");
+        });
+        TranslateService translateService = TranslateServiceManager.getInstance().getTranslate("baidu");
+        List<TranslateResultBO> translate = translateService.translate(text.toString());
+        if (CollUtil.isNotEmpty(translate)) {
+            int i = 0;
+            for (Map.Entry<String, String> en : sourceFields.entrySet()) {
+                translateFields.put(en.getKey(), translate.get(i++).getDst());
             }
-        } catch (IOException e) {
-            message.append("An error occurred while processing files: ").append(e.getMessage()).append("\n");
         }
-        convertor.setResult(message.toString());
-        return convertor;
+        return translateFields;
     }
 
-    private static Map<String, String> loadTranslations(String filePath) throws IOException {
+    private static Map<String, String> loadFileFieldMapData(String filePath) throws IOException {
         return Files.lines(Paths.get(filePath), StandardCharsets.UTF_8)
                 .filter(line -> line.contains("="))
                 .map(line -> line.split("=", 2))
                 .collect(Collectors.toMap(arr -> arr[0], arr -> arr[1]));
     }
 
-    private static List<String> updateLines(
+    private static List<String> updateI18nFile(
             String filePath, Map<String, String> translations, StringBuilder message, ConvertorBO convertor) throws IOException {
         List<String> lines = Files.lines(Paths.get(filePath), StandardCharsets.UTF_8)
                 .collect(Collectors.toList());
 
         boolean hasUntranslated = false;
+        int notFoundKeyCount = 0;
         for (int i = 0; i < lines.size(); i++) {
             String line = lines.get(i).trim();
-            if (!line.isEmpty() && line.contains("=")) {
+            if (line.contains("=")) {
                 String[] kvArr = line.split("=", 2);
                 String key = kvArr[0];
                 if (translations.containsKey(key)) {
@@ -109,13 +94,14 @@ public class TranslateConvertorHandler {
                     if (Boolean.TRUE.equals(convertor.getCompleteLog())) {
                         message.append(String.format("[%d] Key '%s' not found in translation, no change made.%n", i + 1, kvArr[0]))
                                 .append("\n");
+                        notFoundKeyCount++;
                     }
                     hasUntranslated = true;
                 }
             }
         }
         if (hasUntranslated) {
-            message.append("Some keys were not found in the translation file.\n");
+            message.append(notFoundKeyCount).append(" keys were not found in the translation file.\n");
         }
         return lines;
     }
@@ -123,6 +109,5 @@ public class TranslateConvertorHandler {
     private static void overwriteFile(String filePath, List<String> updatedLines) throws IOException {
         Files.write(Paths.get(filePath), updatedLines, StandardCharsets.UTF_8);
     }
-
 
 }

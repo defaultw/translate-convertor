@@ -8,8 +8,14 @@ package com.github.defaultw.plugin.domain.model.bo;
  */
 public class TranslateResultBO {
 
+    /**
+     * 翻译前文本
+     */
     private String src;
 
+    /**
+     * 翻译后文本
+     */
     private String dst;
 
     public String getSrc() {
