@@ -1,18 +1,16 @@
-a.b.c=first
-
-a.b.r=second
-a.b.r1=second
-a.b.r2=second
-a.b.r3=second
-a.b.4r=second
-a.b.r5=second
-a.b.6r=second
-a.b.7r=second
-
-a.b.r36=second
-a.b.64r=second
-a.b.r56=second
+three.import.ip.not.null=资产IP不得为空
 
 
 
-a.b.65r=second
+three.import.ip.error=资产IP格式错误
+three.import.ip.is.null=资产IP不存在
+three.import.group.is.null=安全域不存在
+
+
+three.import.group.not.hava.ip=当前安全域下不存在该IP
+three.import.error.info=错误原因
+three.import.name.not.null=组件名称不得为空
+
+
+three.import.port.error=端口格式错误
+save.already.exist=组件已存在，请检查组件属性或关联资产
