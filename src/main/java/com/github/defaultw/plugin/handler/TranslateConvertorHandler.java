@@ -28,7 +28,7 @@ public class TranslateConvertorHandler {
         try {
             // 翻译后的字段,包括 调取翻译服务 和 直接从翻译文件中读取
             Map<String, String> translateFields;
-            if (convertor.getTranslateNeeded()) {
+            if (Boolean.TRUE.equals(convertor.getTranslateNeeded())) {
                 // 通过翻译服务获取
                 translateFields = loadTranslateMapData(convertor);
             } else {

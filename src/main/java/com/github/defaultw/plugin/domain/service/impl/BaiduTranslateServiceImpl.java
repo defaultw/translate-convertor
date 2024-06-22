@@ -6,6 +6,7 @@ import com.github.defaultw.plugin.domain.model.bo.BaiduTranslateConfigBO;
 import com.github.defaultw.plugin.domain.model.bo.TranslateResultBO;
 import com.github.defaultw.plugin.domain.model.dto.BaiduTranslateDTO;
 import com.github.defaultw.plugin.domain.service.TranslateService;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
@@ -38,6 +39,10 @@ public class BaiduTranslateServiceImpl implements TranslateService {
                 .body(JSON.toJSONString(pa))
                 .execute().body();
         BaiduTranslateDTO translateDTO = JSON.parseObject(body, BaiduTranslateDTO.class);
+        if (!StringUtils.isBlank(translateDTO.getErrorCode()) || !StringUtils.isBlank(translateDTO.getErrorMsg())) {
+            throw new RuntimeException(String.format("百度翻译服务调用失败, Code: %s, Message: %s",
+                    translateDTO.getErrorCode(), translateDTO.getErrorMsg()));
+        }
         BaiduTranslateDTO.Result data = translateDTO.getResult();
         if (data != null) {
             List<BaiduTranslateDTO.TransResult> transResult = data.getTransResult();
