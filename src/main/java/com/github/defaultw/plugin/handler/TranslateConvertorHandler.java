@@ -103,7 +103,7 @@ public class TranslateConvertorHandler {
             }
         }
         if (hasUntranslated) {
-            message.append(notFoundKeyCount).append(" keys were not found in the translation file.\n");
+            message.append(getDateString()).append(notFoundKeyCount).append(" keys were not found in the translation file.\n");
         }
         return lines;
     }
