@@ -24,6 +24,12 @@
 
         <applicationService serviceImplementation="com.github.defaultw.plugin.infrastructure.DataSetting" />
 
+        <applicationConfigurable
+                parentId="tools"
+                instance="com.github.defaultw.plugin.module.ConfigView"
+                id="com.github.defaultw.plugin.module.ConfigView"
+                displayName="Translate Convertor"/>
+
     </extensions>
 
     <actions>

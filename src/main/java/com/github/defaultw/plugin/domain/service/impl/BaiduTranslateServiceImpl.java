@@ -3,9 +3,13 @@ package com.github.defaultw.plugin.domain.service.impl;
 import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson.JSON;
 import com.github.defaultw.plugin.domain.model.bo.BaiduTranslateConfigBO;
+import com.github.defaultw.plugin.domain.model.bo.TranslateConfigBO;
 import com.github.defaultw.plugin.domain.model.bo.TranslateResultBO;
 import com.github.defaultw.plugin.domain.model.dto.BaiduTranslateDTO;
 import com.github.defaultw.plugin.domain.service.TranslateService;
+import com.github.defaultw.plugin.domain.service.TranslateServiceManager;
+import com.github.defaultw.plugin.infrastructure.DataSetting;
+import com.github.defaultw.plugin.infrastructure.DataState;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -56,6 +60,21 @@ public class BaiduTranslateServiceImpl implements TranslateService {
             return results;
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    public void register(TranslateConfigBO config) {
+        DataState dataState = DataSetting.getInstance().getState();
+        if (dataState == null) {
+            return;
+        }
+        // 注册百度翻译服务
+        BaiduTranslateConfigBO bdConfig = new BaiduTranslateConfigBO();
+        bdConfig.setFrom(dataState.getFrom().getCode());
+        bdConfig.setTo(dataState.getTo().getCode());
+        bdConfig.setApiKey(dataState.getApiKey());
+        bdConfig.setSecretKey(dataState.getSecretKey());
+        TranslateServiceManager.getInstance().registerService("baidu", new BaiduTranslateServiceImpl(bdConfig));
     }
 
     /**

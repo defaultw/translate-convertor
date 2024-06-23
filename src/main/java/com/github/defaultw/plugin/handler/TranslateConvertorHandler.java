@@ -5,11 +5,13 @@ import com.github.defaultw.plugin.domain.model.bo.TranslateResultBO;
 import com.github.defaultw.plugin.domain.service.TranslateService;
 import com.github.defaultw.plugin.domain.service.TranslateServiceManager;
 import com.github.defaultw.plugin.handler.bo.ConvertorBO;
+import com.github.defaultw.plugin.utils.LocalDateTimeUtil;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,12 +41,12 @@ public class TranslateConvertorHandler {
 
             if (!updatedLines.isEmpty()) {
                 overwriteFile(convertor.getSourceFilePath(), updatedLines);
-                message.append("i18n file has been successfully updated.\n");
+                message.append(getDateString()).append("i18n file has been successfully updated.\n");
             } else {
-                message.append("No changes were made to the i18n file.\n");
+                message.append(getDateString()).append("No changes were made to the i18n file.\n");
             }
         } catch (IOException e) {
-            message.append("An error occurred while processing files: ").append(e.getMessage()).append("\n");
+            message.append(getDateString()).append("An error occurred while processing files: ").append(e.getMessage()).append("\n");
         }
         convertor.setResult(message.toString());
         return convertor;
@@ -92,7 +94,7 @@ public class TranslateConvertorHandler {
                     lines.set(i, key + "=" + translations.get(key));
                 } else {
                     if (Boolean.TRUE.equals(convertor.getCompleteLog())) {
-                        message.append(String.format("[%d] Key '%s' not found in translation, no change made.%n", i + 1, kvArr[0]))
+                        message.append(getDateString()).append(String.format("[%d] Key '%s' not found in translation, no change made.%n", i + 1, kvArr[0]))
                                 .append("\n");
                         notFoundKeyCount++;
                     }
@@ -108,6 +110,13 @@ public class TranslateConvertorHandler {
 
     private static void overwriteFile(String filePath, List<String> updatedLines) throws IOException {
         Files.write(Paths.get(filePath), updatedLines, StandardCharsets.UTF_8);
+    }
+
+    /**
+     * 获取时间字符串
+     */
+    private static String getDateString() {
+        return String.format("[%s] ", LocalDateTimeUtil.parse(LocalDateTime.now()));
     }
 
 }

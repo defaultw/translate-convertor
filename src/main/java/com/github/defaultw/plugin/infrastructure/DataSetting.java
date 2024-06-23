@@ -5,7 +5,6 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * 数据持久化
@@ -23,7 +22,11 @@ public class DataSetting implements PersistentStateComponent<DataState> {
     }
 
     @Override
-    public @Nullable DataState getState() {
+    public DataState getState() {
+        // 默认使用百度翻译
+        if (this.dataState.getTranslateComboItem() == null) {
+            this.dataState.setTranslateComboItem(new TranslateComboItem("baidu", "百度翻译"));
+        }
         return this.dataState;
     }
 

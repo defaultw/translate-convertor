@@ -1,5 +1,6 @@
 package com.github.defaultw.plugin.domain.service;
 
+import com.github.defaultw.plugin.domain.model.bo.TranslateConfigBO;
 import com.github.defaultw.plugin.domain.model.bo.TranslateResultBO;
 
 import java.util.List;
@@ -19,6 +20,12 @@ public interface TranslateService {
      * @return 翻译后结果
      */
     List<TranslateResultBO> translate(String text);
+
+    /**
+     * 注册服务
+     * @param config 服务配置
+     */
+    void register(TranslateConfigBO config);
 
 
 }

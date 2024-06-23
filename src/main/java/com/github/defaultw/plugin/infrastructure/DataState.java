@@ -1,12 +1,17 @@
 package com.github.defaultw.plugin.infrastructure;
 
+import java.io.Serializable;
+
 /**
  * 持久化数据
  *
  * @author Default.W
  * @date 2024/6/18
  */
-public class DataState {
+public class DataState implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    private TranslateComboItem translateComboItem;
 
     private Language from;
 
@@ -61,10 +66,19 @@ public class DataState {
         this.currentTranslateService = currentTranslateService;
     }
 
+    public TranslateComboItem getTranslateComboItem() {
+        return translateComboItem;
+    }
+
+    public void setTranslateComboItem(TranslateComboItem translateComboItem) {
+        this.translateComboItem = translateComboItem;
+    }
+
     @Override
     public String toString() {
         return "DataState{" +
-                "from=" + from +
+                "translateComboItem=" + translateComboItem +
+                ", from=" + from +
                 ", to=" + to +
                 ", apiKey='" + apiKey + '\'' +
                 ", secretKey='" + secretKey + '\'' +

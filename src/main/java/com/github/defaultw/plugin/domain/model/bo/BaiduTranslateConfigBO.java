@@ -6,7 +6,7 @@ package com.github.defaultw.plugin.domain.model.bo;
  * @author Default.W
  * @date 2024/6/19
  */
-public class BaiduTranslateConfigBO extends TranslateParamBO {
+public class BaiduTranslateConfigBO extends TranslateConfigBO {
 
     private String apiKey;
 

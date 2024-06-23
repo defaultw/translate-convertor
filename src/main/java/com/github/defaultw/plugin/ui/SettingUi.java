@@ -1,8 +1,6 @@
 package com.github.defaultw.plugin.ui;
 
-import com.github.defaultw.plugin.domain.model.bo.BaiduTranslateConfigBO;
 import com.github.defaultw.plugin.domain.service.TranslateServiceManager;
-import com.github.defaultw.plugin.domain.service.impl.BaiduTranslateServiceImpl;
 import com.github.defaultw.plugin.infrastructure.DataSetting;
 import com.github.defaultw.plugin.infrastructure.DataState;
 import com.github.defaultw.plugin.infrastructure.Language;
@@ -19,23 +17,18 @@ import javax.swing.*;
  * @author Default.W
  * @date 2024/6/17
  */
-public class SettingUI implements Configurable {
+public class SettingUi implements Configurable {
     private JPanel mainPanel;
     private JComboBox<Language> fromComboBox;
     private JComboBox<Language> toComboBox;
     private JLabel fromLabel;
     private JLabel toLabel;
-    private JTextField apiKeyTextField;
-    private JTextField secretKeyTextField;
-    private JLabel apiKeyLabel;
-    private JLabel secretKeyLabel;
-
 
     private BaseConsoleUi baseConsoleUi;
 
-    public SettingUI(BaseConsoleUi baseConsoleUi) {
+    public SettingUi(BaseConsoleUi baseConsoleUi) {
         this.baseConsoleUi = baseConsoleUi;
-        this.mainPanel.setSize(200, 100);
+        this.mainPanel.setSize(300, 100);
 
         DataState state = DataSetting.getInstance().getState();
         fromComboBox.addItem(new Language("zh", "中文"));
@@ -47,8 +40,6 @@ public class SettingUI implements Configurable {
         if (state != null){
             fromComboBox.setSelectedItem(state.getFrom());
             toComboBox.setSelectedItem(state.getTo());
-            apiKeyTextField.setText(state.getApiKey());
-            secretKeyTextField.setText(state.getSecretKey());
         }
     }
 
@@ -75,14 +66,7 @@ public class SettingUI implements Configurable {
         }
         dataState.setFrom((Language) fromComboBox.getSelectedItem());
         dataState.setTo((Language) toComboBox.getSelectedItem());
-        dataState.setApiKey(apiKeyTextField.getText());
-        dataState.setSecretKey(secretKeyTextField.getText());
-        // 注册百度翻译服务
-        BaiduTranslateConfigBO bdConfig = new BaiduTranslateConfigBO();
-        bdConfig.setFrom(dataState.getFrom().getCode());
-        bdConfig.setTo(dataState.getTo().getCode());
-        bdConfig.setApiKey(dataState.getApiKey());
-        bdConfig.setSecretKey(dataState.getSecretKey());
-        TranslateServiceManager.getInstance().registerService("baidu", new BaiduTranslateServiceImpl(bdConfig));
+        // 注册翻译服务
+        TranslateServiceManager.getInstance().registerService();
     }
 }
